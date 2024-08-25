@@ -12,20 +12,34 @@ from .permissions import *
 # Create your views here.
 
 
-class EmployeeApplicationViewSet(
+class CurrentRepairApplicationViewSet(
                    mixins.RetrieveModelMixin,
                    mixins.UpdateModelMixin,
                    mixins.DestroyModelMixin,
                    mixins.ListModelMixin,
                    GenericViewSet):
-    queryset = Application.objects.all()
+    queryset = Application.objects.exclude(status='C')
     serializer_class = ApplicationEmployeeSerializer
     permission_classes = [IsEmployee]
 
     def perform_destroy(self, instance):
         instance.is_archived=True
         instance.save()
-    
+
+class IncomingRepairApplicationViewSet(
+                   mixins.RetrieveModelMixin,
+                   mixins.UpdateModelMixin,
+                   mixins.DestroyModelMixin,
+                   mixins.ListModelMixin,
+                   GenericViewSet):
+    queryset = Application.objects.filter(status='C')
+    serializer_class = ApplicationEmployeeSerializer
+    permission_classes = [IsEmployee]
+
+    def perform_destroy(self, instance):
+        instance.is_archived=True
+        instance.save()
+      
 class ClientApplicationViewSet(mixins.CreateModelMixin,
                    mixins.RetrieveModelMixin,
                    mixins.ListModelMixin,
