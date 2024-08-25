@@ -35,3 +35,17 @@ export async function get_client_applications(){
       throw error
     }
 }
+
+// Текущие , входящие, заявки на звонки. 3 эндпоинта из EmployyePageApplication
+export async function get_all_applications_from_clients(apiEndpoint){
+  const url = apiEndpoint
+  try{
+    const response = await axiosInstance.get(url)
+    return response.data
+  }
+  catch (error) {
+    console.log('Error loading all applications')
+    throw error
+  }
+
+}
