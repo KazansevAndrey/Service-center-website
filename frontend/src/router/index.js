@@ -10,6 +10,8 @@ import VacanciesView from '@/views/VacanciesView.vue'
 import RepairStatusView from '@/views/RepairStatusView.vue'
 import EmployeeLoginView from '@/views/EmployeeLoginView.vue'
 import EmployeePageApplicationsView from '@/views/EmployeePageApplicationsView.vue'
+import ApplicationView from '@/views/ApplicationView.vue'
+
 import store from "@/stores";
 
 const routes = [
@@ -73,6 +75,15 @@ const routes = [
     meta: {
       requiresEmployees: true // 
     },
+  },
+  {
+    path: "/employee-page-applications/:application_id",
+    name: "application",
+    component: ApplicationView,
+    meta: {
+      requiresEmployees: true // 
+    },
+    props: true,
   },
 ];
 

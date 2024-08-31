@@ -5,7 +5,8 @@
             <div class="category-container">
                 <p class="menu-title">Меню</p>
                 <div @click="selectCategory(category)" class="category-item" v-for="category in categories"
-                    :key="category.id">
+                    :key="category.id"
+                    :style="{ backgroundColor: category.categoryName === categoryName ? '#c8c8c8' : '' }">
                     <i :class="category.icon"></i>
                     <span class="category-title">{{ category.name }}</span>
                     <span class="category-count">{{ category.count }}</span>
@@ -13,7 +14,8 @@
             </div>
             <div class="items-container">
                 <div class="applications-list">
-                    <component :is="selectedComponent" :api-endpoint="apiEndpoint" :category_name="categoryName" :applications="categoryApplications">
+                    <component :is="selectedComponent" :api-endpoint="apiEndpoint" :category_name="categoryName"
+                        :applications="categoryApplications">
                     </component>
                 </div>
             </div>
@@ -36,7 +38,7 @@ export default {
                     id: 1,
                     name: 'Выполняются мной',
                     component: markRaw(repairApplications),
-                    icon: 'fa fa-bell icon',
+                    icon: 'fa fa-user icon',
                     count: 0,
                     endpoint: 'applications/personal-repair-applications',
                     categoryName: 'personalRepairApplications',
@@ -65,8 +67,8 @@ export default {
                 archivesApplications: {
                     id: 4,
                     name: 'Архивные заявки',
-                    component: markRaw(callApplications),
-                    icon: 'fa fa-laptop icon',
+                    component: markRaw(repairApplications),
+                    icon: 'fa fa-trash icon',
                     count: 0,
                     endpoint: 'applications/archive-repair-applications',
                     categoryName: 'archiveRepairApplications',
@@ -76,7 +78,7 @@ export default {
                     id: 5,
                     name: 'Заявки на звонки',
                     component: markRaw(callApplications),
-                    icon: 'fa fa-laptop icon',
+                    icon: 'fa fa-phone icon',
                     count: 0,
                     endpoint: 'call_requests/',
                     categoryName: 'callApplications',
@@ -84,8 +86,8 @@ export default {
                 }
             },
             selectedComponent: markRaw(repairApplications),
-            apiEndpoint: 'applications/incoming-repair-applications',
-            categoryName: "incomingRepairApplications",
+            apiEndpoint: 'applications/personal-repair-applications',
+            categoryName: "personalRepairApplications",
             categoryApplications: []
         };
     },
@@ -105,12 +107,12 @@ export default {
             // Проходим по всем категориям и обновляем count
             for (let key in this.categories) {
                 let category = this.categories[key];
-                let categoryApplications  = await this.getApplicationsByCategory(category.endpoint)
+                let categoryApplications = await this.getApplicationsByCategory(category.endpoint)
                 // Устанавливаем заявки для категории 
                 this.categories[key].applications = categoryApplications
-                this.categories[key].count = categoryApplications.length                
+                this.categories[key].count = categoryApplications.length
             }
-            this.categoryApplications = this.categories.incomingRepairApplications.applications
+            this.categoryApplications = this.categories.personalRepairApplications.applications
         }
     },
     created() {
@@ -249,7 +251,7 @@ export default {
     width: 100%;
 }
 
-@media(max-width:771px) {
+@media(max-width:1200px) {
     .container {
         flex-direction: column
     }

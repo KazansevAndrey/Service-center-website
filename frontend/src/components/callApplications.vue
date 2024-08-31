@@ -11,7 +11,7 @@
             <span class="application-value">{{application.phone_number}}</span>
         </div>
         <div class="application-parameter">
-            <i class="fas fa-desktop"></i>
+            <i class="fas fa-calendar-alt"></i>
             <span class="application-text">Дата создания:</span>
             <span class="application-value">{{ application.time_create }}</span>
         </div>

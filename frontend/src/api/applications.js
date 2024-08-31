@@ -48,3 +48,16 @@ export async function get_all_applications_from_clients(apiEndpoint){
     throw error
   }
 }
+
+export async function get_application(id){
+  const url = `/applications/retrieve-applicaitons/${id}`
+  try {
+    const response  = await axiosInstance.get(url)
+    console.log(response.data)
+    return response.data
+  }
+  catch(error) {
+    console.log('Error loading application')
+    throw error
+  }
+}

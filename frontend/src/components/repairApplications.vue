@@ -1,41 +1,42 @@
 <template>
+
     <div v-if="category_name == 'personalRepairApplications' || category_name == 'incomingRepairApplications'">
-        <div class="application-item menu" v-for='application in applications' :key="application.id">
-            <div class="application-parameter">
-                <i class="fas fa-user"></i>
-                <span class="application-text">Номер заявки:</span>
-                <span class="application-value">{{ application.id }}</span>
-            </div>
-            <div class="application-parameter">
-                <i class="fas fa-tasks"></i>
-                <span class="application-text">Email клиента:</span>
-                <span class="application-value">{{ application.user_email }}</span>
-            </div>
-            <div class="application-parameter">
-                <i class="fas fa-calendar-alt "></i>
-                <span class="application-text">Дата создания:</span>
-                <span class="application-value">{{ application.time_create }}</span>
-            </div>
-        </div>
+            <a :href="`employee-page-applications/${application.id}`" class="application-item menu" v-for='application in applications' :key="application.id">
+                <div class="application-parameter">
+                    <i class="fas fa-user"></i>
+                    <span class="application-text">Номер заявки:</span>
+                    <span class="application-value">{{ application.id }}</span>
+                </div>
+                <div class="application-parameter">
+                    <i class="fas fa-envelope"></i>
+                    <span class="application-text">Email клиента:</span>
+                    <span class="application-value">{{ application.user_email }}</span>
+                </div>
+                <div class="application-parameter">
+                    <i class="fas fa-calendar-alt "></i>
+                    <span class="application-text">Дата создания:</span>
+                    <span class="application-value">{{ application.time_create }}</span>
+                </div>
+        </a>
     </div>
     <div v-else>
-        <div class="application-item menu" v-for='application in applications' :key="application.id">
+        <a :href="`employee-page-applications/${application.id}`" class="application-item menu" v-for='application in applications' :key="application.id">
             <div class="application-parameter">
                 <i class="fas fa-user"></i>
                 <span class="application-text">Номер заявки:</span>
                 <span class="application-value">{{ application.id }}</span>
             </div>
             <div class="application-parameter">
-                <i class="fas fa-calendar-alt "></i>
+                <i class="fas fa-envelope "></i>
                 <span class="application-text">Email мастера:</span>
                 <span class="application-value">{{ application.employee_email }}</span>
             </div>
             <div class="application-parameter">
-                <i class="fas fa-tasks"></i>
+                <i class="fas fa-calendar-alt"></i>
                 <span class="application-text">Дата создания:</span>
                 <span class="application-value">{{ application.time_create }}</span>
             </div>
-        </div>
+        </a>
     </div>
 
 </template>
@@ -61,6 +62,7 @@ export default {
 </script>
 
 <style scoped>
+
 .applications-list {
     min-height: 50vh;
 }
@@ -77,6 +79,7 @@ export default {
     box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
     border: 1px solid #3a3f47;
     transition: transform 0.3s ease, box-shadow 0.3s ease;
+    text-decoration: none
 }
 
 .application-item:hover {
@@ -111,4 +114,5 @@ export default {
     color: #61dafb;
     margin-right: 5px;
 }
+
 </style>
