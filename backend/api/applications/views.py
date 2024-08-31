@@ -1,4 +1,5 @@
 
+from asyncio.windows_events import NULL
 from urllib import request
 from django.views import generic
 from rest_framework import mixins
@@ -20,32 +21,33 @@ class PersonalRepairApplicationViewSet(
     permission_classes = [IsEmployee]
 
     def get_queryset(self):
-        print(self.request.user)
-        return Application.objects.filter(employee__user=self.request.user)
+        return Application.objects.filter(employee__user=self.request.user, is_archived=False )
     
 class IncomingRepairApplicationViewSet(
                    mixins.ListModelMixin,
                    GenericViewSet):
-    queryset = Application.objects.filter(status='C')
+    queryset = Application.objects.filter(employee__isnull=True, is_archived=False)
     serializer_class = RepairApplicationSerializer
     permission_classes = [IsEmployee]
 
-    # def perform_destroy(self, instance):
-    #     instance.is_archived=True
-    #     instance.save()
-
 class CurrentRepairApplicationViewSet(mixins.ListModelMixin,
                                       GenericViewSet):
-    queryset = Application.objects.exclude(status='C')
+    queryset = Application.objects.filter(employee__isnull=False, is_archived=False)
     serializer_class = CurrentRepairApplicationSerializer
 
 class ArchiveRepairApplicationViewSet(
                    mixins.ListModelMixin,
                    GenericViewSet):
-    queryset = Application.objects.filter(is_archive=True)
+    queryset = Application.objects.filter(is_archived=True)
     serializer_class = RepairApplicationSerializer
     permission_classes = [IsEmployee]
 
+
+class RetrieveApplicationViewSet(mixins.RetrieveModelMixin,
+                           GenericViewSet):
+    queryset = Application.objects.all()
+    serializer_class = ApplicationRetriveSerializer
+    permission_classes = [IsEmployee]
 
 class ClientApplicationViewSet(mixins.CreateModelMixin,
                    mixins.RetrieveModelMixin,

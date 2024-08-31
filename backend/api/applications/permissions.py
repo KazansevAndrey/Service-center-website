@@ -7,6 +7,12 @@ class IsEmployee(permissions.BasePermission):
     def has_permission(self, request, view):
         return hasattr(request.user, 'employeeprofile')
     
+    def has_object_permission(self, request, view, obj):
+        if request.method == 'GET':
+            return hasattr(request.user, 'employeeprofile') 
+        else:
+            return obj.employee.user == request.user
+        
 class IsClient(permissions.BasePermission):
     """
     Клиентский доступ
@@ -16,6 +22,5 @@ class IsClient(permissions.BasePermission):
             return True
         
     def has_object_permission(self, request, view, obj):
-         if request.method != 'GET':
-             return True
+        return False
          

@@ -7,6 +7,7 @@ router.register(r'incoming-repair-applications', IncomingRepairApplicationViewSe
 router.register(r'current-repair-applications', CurrentRepairApplicationViewSet, basename='current-repair-applications')
 router.register(r'personal-repair-applications', PersonalRepairApplicationViewSet, basename='personal-repair-applications')
 router.register(r'archive-repair-applications', ArchiveRepairApplicationViewSet, basename='archive-repair-applications')
+router.register(r'retrieve-applicaitons', RetrieveApplicationViewSet, basename='retrieve-applications')
 
 urlpatterns = router.urls
 urlpatterns+=[path('device-types-list', DevicesTypesList.as_view(), name='device-types-list')]
