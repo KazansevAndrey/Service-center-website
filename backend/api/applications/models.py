@@ -2,6 +2,8 @@ from django.db import models
 from django.utils import timezone
 from accounts.models import User
 from datetime import datetime
+from employees.models import EmployeeProfile
+import uuid
 # Create your models here.
 
 
@@ -20,9 +22,9 @@ class DeviceType(models.Model):
 
 class Application(models.Model):
     '''Таблица заявок на ремонт'''
-
     client = models.ForeignKey(User, on_delete=models.CASCADE)
     device = models.ForeignKey(DeviceType, on_delete=models.CASCADE)
+    employee = models.ForeignKey(EmployeeProfile, on_delete=models.SET_NULL, null=True)
     description = models.TextField()
     time_create = models.DateTimeField(auto_now_add=True)
     time_update = models.DateTimeField(blank=True, null=True, auto_now_add=True)

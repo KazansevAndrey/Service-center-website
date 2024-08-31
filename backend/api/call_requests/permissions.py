@@ -8,7 +8,6 @@ class CallRequestPermission(permissions.BasePermission):
         elif request.method == 'POST':
             return True
         else:
-            return request.user.is_superuser
-    
+            return hasattr(request.user, 'employeeprofile')
     def has_object_permission(self, request, view, obj):
         return request.user.is_superuser

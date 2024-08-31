@@ -1,5 +1,6 @@
 
 from urllib import request
+from django.views import generic
 from rest_framework import mixins
 from rest_framework.viewsets import GenericViewSet
 from rest_framework.views import APIView
@@ -12,41 +13,46 @@ from .permissions import *
 # Create your views here.
 
 
-class CurrentRepairApplicationViewSet(
-                   mixins.RetrieveModelMixin,
-                   mixins.UpdateModelMixin,
-                   mixins.DestroyModelMixin,
+class PersonalRepairApplicationViewSet(    
                    mixins.ListModelMixin,
                    GenericViewSet):
-    queryset = Application.objects.exclude(status='C')
-    serializer_class = ApplicationEmployeeSerializer
+    serializer_class = RepairApplicationSerializer
     permission_classes = [IsEmployee]
 
-    def perform_destroy(self, instance):
-        instance.is_archived=True
-        instance.save()
-
+    def get_queryset(self):
+        print(self.request.user)
+        return Application.objects.filter(employee__user=self.request.user)
+    
 class IncomingRepairApplicationViewSet(
-                   mixins.RetrieveModelMixin,
-                   mixins.UpdateModelMixin,
-                   mixins.DestroyModelMixin,
                    mixins.ListModelMixin,
                    GenericViewSet):
     queryset = Application.objects.filter(status='C')
-    serializer_class = ApplicationEmployeeSerializer
+    serializer_class = RepairApplicationSerializer
     permission_classes = [IsEmployee]
 
-    def perform_destroy(self, instance):
-        instance.is_archived=True
-        instance.save()
-      
+    # def perform_destroy(self, instance):
+    #     instance.is_archived=True
+    #     instance.save()
+
+class CurrentRepairApplicationViewSet(mixins.ListModelMixin,
+                                      GenericViewSet):
+    queryset = Application.objects.exclude(status='C')
+    serializer_class = CurrentRepairApplicationSerializer
+
+class ArchiveRepairApplicationViewSet(
+                   mixins.ListModelMixin,
+                   GenericViewSet):
+    queryset = Application.objects.filter(is_archive=True)
+    serializer_class = RepairApplicationSerializer
+    permission_classes = [IsEmployee]
+
+
 class ClientApplicationViewSet(mixins.CreateModelMixin,
                    mixins.RetrieveModelMixin,
                    mixins.ListModelMixin,
                    GenericViewSet):
     serializer_class = ApplicationClientSerializer
     permission_classes = [IsAuthenticated, IsClient]
-
     def get_queryset(self):
         return Application.objects.filter(client=self.request.user).order_by('-time_update')
     
