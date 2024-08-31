@@ -67,14 +67,19 @@ export default {
             }
             
             var icons = document.querySelectorAll(".icon");
-            icons.forEach((element) => {
-                element.style.color = "#0d6efd";
-            });
+            if (icons){
+                icons.forEach((element) => {
+                    element.style.color = "#0d6efd";
+                });
+            }
+            
             var categoryCounts = document.querySelectorAll('.category-count')
-            categoryCounts.forEach((element) => {
-                element.style.backgroundColor = '#cadfff'
-                element.style.color = '#000'
-            })
+            if (categoryCounts){
+                categoryCounts.forEach((element) => {
+                    element.style.backgroundColor = '#cadfff'
+                    element.style.color = '#000'
+                })
+            }
         },
         Theme2() {
 
@@ -134,15 +139,21 @@ export default {
                 categoryContainer.style.background = "#212529";
             }
             var icons = document.querySelectorAll(".icon");
-            icons.forEach((element) => {
-                element.style.color = "#212529";
-            });
+            if (icons){
+                icons.forEach((element) => {
+                    element.style.color = "#212529";
+                })
+            }
+            
 
             var categoryCounts = document.querySelectorAll('.category-count')
-            categoryCounts.forEach((element) => {
-                element.style.backgroundColor = '#212529'
-                element.style.color = '#fff'
-            })
+            if (categoryCounts){
+                categoryCounts.forEach((element) => {
+                    element.style.backgroundColor = '#212529'
+                    element.style.color = '#fff'
+                })
+            }
+            
             
         },
         ChangeTheme() {

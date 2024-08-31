@@ -47,5 +47,4 @@ export async function get_all_applications_from_clients(apiEndpoint){
     console.log('Error loading all applications')
     throw error
   }
-
 }

@@ -1,51 +1,62 @@
 <template>
-    <div class="application-item menu">
-        <div class="application-parameter">
-            <i class="fas fa-user"></i>
-            <span class="application-text">Пользователь:</span>
-            <span class="application-value">User123</span>
+    <div v-if="category_name == 'personalRepairApplications' || category_name == 'incomingRepairApplications'">
+        <div class="application-item menu" v-for='application in applications' :key="application.id">
+            <div class="application-parameter">
+                <i class="fas fa-user"></i>
+                <span class="application-text">Номер заявки:</span>
+                <span class="application-value">{{ application.id }}</span>
+            </div>
+            <div class="application-parameter">
+                <i class="fas fa-tasks"></i>
+                <span class="application-text">Email клиента:</span>
+                <span class="application-value">{{ application.user_email }}</span>
+            </div>
+            <div class="application-parameter">
+                <i class="fas fa-calendar-alt "></i>
+                <span class="application-text">Дата создания:</span>
+                <span class="application-value">{{ application.time_create }}</span>
+            </div>
         </div>
-        <div class="application-parameter">
-            <i class="fas fa-calendar-alt "></i>
-            <span class="application-text">Дата создания:</span>
-            <span class="application-value">10:10:2024</span>
-        </div>
-        <div class="application-parameter">
-            <i class="fas fa-desktop"></i>
-            <span class="application-text">Устройство:</span>
-            <span class="application-value">Ноутбук</span>
-        </div>
-        <div class="application-parameter">
-            <i class="fas fa-tasks"></i>
-            <span class="application-text">Статус:</span>
-            <span class="application-value">В процессе</span>
-        </div>
-
     </div>
+    <div v-else>
+        <div class="application-item menu" v-for='application in applications' :key="application.id">
+            <div class="application-parameter">
+                <i class="fas fa-user"></i>
+                <span class="application-text">Номер заявки:</span>
+                <span class="application-value">{{ application.id }}</span>
+            </div>
+            <div class="application-parameter">
+                <i class="fas fa-calendar-alt "></i>
+                <span class="application-text">Email мастера:</span>
+                <span class="application-value">{{ application.employee_email }}</span>
+            </div>
+            <div class="application-parameter">
+                <i class="fas fa-tasks"></i>
+                <span class="application-text">Дата создания:</span>
+                <span class="application-value">{{ application.time_create }}</span>
+            </div>
+        </div>
+    </div>
+
 </template>
 <script>
-import get_all_applications_from_clients from '@/api/applications'
+
 export default {
     name: 'repairApplications',
     props: {
-        apiEndpoint:{
-            type:String,
+        apiEndpoint: {
+            type: String,
+            required: true
+        },
+        category_name: {
+            type: String,
+            required: true
+        },
+        applications: {
+            type: Array,
             required: true
         }
     },
-    data() {
-        return {
-            Applications: []
-        }
-    },
-    methods: {
-        async getApplications() {
-            this.Applications = await get_all_applications_from_clients(this.apiEndpoint)
-        }
-    },
-    created(){
-        this.getApplications()
-    }
 }
 </script>
 
@@ -76,8 +87,11 @@ export default {
 .application-parameter {
     margin-bottom: 10px;
     display: flex;
-    flex: 1;
+    flex: 1 1 1;
     margin-right: 10px;
+    min-width: 32%;
+    flex-wrap: wrap;
+
 
 }
 
@@ -85,6 +99,7 @@ export default {
     margin-right: 10px;
     color: #e9ecef;
     font-weight: 600;
+
 }
 
 .application-value {

@@ -1,70 +1,124 @@
 <template>
     <div class="main-container">
-        <h1 class="heading">Текущие заявки на ремонт</h1>
+        <h1 class="heading">Личный кабинет сотрудника</h1>
         <div class="container">
             <div class="category-container">
                 <p class="menu-title">Меню</p>
-                <div @click=selectCategory(category) class="category-item" v-for="category in categories" :key=category.id>
-                    <i class="{{ category.icon }}"></i>
-                    <span class="category-title">{{category.name}}</span>
-                    <span class="category-count">{{category.count}}</span>
+                <div @click="selectCategory(category)" class="category-item" v-for="category in categories"
+                    :key="category.id">
+                    <i :class="category.icon"></i>
+                    <span class="category-title">{{ category.name }}</span>
+                    <span class="category-count">{{ category.count }}</span>
                 </div>
             </div>
-            <div class='items-container'>
+            <div class="items-container">
                 <div class="applications-list">
-                    <component :is="selectedComplonent" :apiEndpoint='apiEndpoint'></component>  
-                </div> 
+                    <component :is="selectedComponent" :api-endpoint="apiEndpoint" :category_name="categoryName" :applications="categoryApplications">
+                    </component>
+                </div>
             </div>
         </div>
     </div>
 </template>
 
 <script>
-import callApplications from '@/components/callApplications.vue'
-import repairApplications from '@/components/repairApplications.vue'
+import { markRaw } from 'vue';
+import { get_all_applications_from_clients } from '@/api/applications'
+import callApplications from '@/components/callApplications.vue';
+import repairApplications from '@/components/repairApplications.vue';
+
 export default {
     name: 'EmployeePageApplicationsView',
     data() {
         return {
             categories: {
-                incomingRepairApplications: {
+                personalRepairApplications: {
                     id: 1,
-                    name: 'Заявки на ремонт',
-                    component: repairApplications,
+                    name: 'Выполняются мной',
+                    component: markRaw(repairApplications),
                     icon: 'fa fa-bell icon',
-                    count: 123,
-                    endpoint: 'incoming-repair-applications'
+                    count: 0,
+                    endpoint: 'applications/personal-repair-applications',
+                    categoryName: 'personalRepairApplications',
+                    applications: ''
+                },
+                incomingRepairApplications: {
+                    id: 2,
+                    name: 'Входящие заявки',
+                    component: markRaw(repairApplications),
+                    icon: 'fa fa-bell icon',
+                    count: 0,
+                    endpoint: 'applications/incoming-repair-applications',
+                    categoryName: 'incomingRepairApplications',
+                    applications: ''
                 },
                 currentRepairApplications: {
-                    id: 2,
-                    name: 'В процессе выполнения',
-                    component: repairApplications,
+                    id: 3,
+                    name: 'В процессе работы',
+                    component: markRaw(repairApplications),
                     icon: 'fa fa-laptop icon',
-                    count: 123,
-                    endpoint: 'current-repair-applications'
+                    count: 0,
+                    endpoint: 'applications/current-repair-applications',
+                    categoryName: 'currentRepairApplications',
+                    applications: ''
+                },
+                archivesApplications: {
+                    id: 4,
+                    name: 'Архивные заявки',
+                    component: markRaw(callApplications),
+                    icon: 'fa fa-laptop icon',
+                    count: 0,
+                    endpoint: 'applications/archive-repair-applications',
+                    categoryName: 'archiveRepairApplications',
+                    applications: ''
                 },
                 callApplications: {
-                    id: 3,
+                    id: 5,
                     name: 'Заявки на звонки',
-                    component: callApplications,
+                    component: markRaw(callApplications),
                     icon: 'fa fa-laptop icon',
-                    count: 123,
-                    endpoint: 'call-applications'
-
+                    count: 0,
+                    endpoint: 'call_requests/',
+                    categoryName: 'callApplications',
+                    applications: ''
                 }
             },
-            selectedComplonent : repairApplications,
-            apiEndpoint: 'incoming-repair-applications'
-        }
+            selectedComponent: markRaw(repairApplications),
+            apiEndpoint: 'applications/incoming-repair-applications',
+            categoryName: "incomingRepairApplications",
+            categoryApplications: []
+        };
     },
     methods: {
-        selectCategory(category){
-            this.selectedComplonent = category.component
-            this.apiEndpoint = category.apiEndpoint
+        selectCategory(category) {
+            this.selectedComponent = category.component;
+            this.categoryApplications = category.applications
+            this.categoryName = category.categoryName
+        },
+
+        async getApplicationsByCategory(apiEndpoint) {
+            const applications = await get_all_applications_from_clients(apiEndpoint);
+            return applications
+        },
+
+        async getAllApplications() {
+            // Проходим по всем категориям и обновляем count
+            for (let key in this.categories) {
+                let category = this.categories[key];
+                let categoryApplications  = await this.getApplicationsByCategory(category.endpoint)
+                // Устанавливаем заявки для категории 
+                this.categories[key].applications = categoryApplications
+                this.categories[key].count = categoryApplications.length                
+            }
+            this.categoryApplications = this.categories.incomingRepairApplications.applications
         }
+    },
+    created() {
+        this.getAllApplications()
     }
 }
 </script>
+
 
 <style scoped>
 .container {
@@ -195,7 +249,7 @@ export default {
     width: 100%;
 }
 
-@media(max-width:575px) {
+@media(max-width:771px) {
     .container {
         flex-direction: column
     }

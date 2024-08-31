@@ -1,5 +1,5 @@
 <template>
-    <div class="application-item menu" v-for="application in callApplications" :key="application.id">
+    <div class="application-item menu" v-for="application in applications" :key="application.id">
         <div class="application-parameter">
             <i class="fas fa-user"></i>
             <span class="application-text">Имя:</span>
@@ -19,27 +19,22 @@
     </div>
 </template>
 <script>
-import { get_all_applications_from_clients } from '@/api/applications';
+
 export default {
     name: 'callApplications',
     props: {
         apiEndpoint:{
             type:String,
-            is_required: true
+            required: true
+        },
+        category_name:{
+            type: String,
+            required: true
+        },
+        applications: {
+            type: Array,
+            required: true
         }
-    },
-    data() {
-        return {
-            callApplications: []
-        }
-    },
-    methods: {
-        async getCallApplications() {
-            this.callApplications = await get_all_applications_from_clients(this.apiEndpoint)
-        }
-    },
-    created(){
-        this.getCallApplications()
     }
 }
 </script>
@@ -71,8 +66,12 @@ export default {
 .application-parameter {
     margin-bottom: 10px;
     display: flex;
-    flex: 1;
+    flex: 1 1 1;
     margin-right: 10px;
+    min-width: 32%; 
+    flex-wrap: wrap;
+    justify-content: start;
+
 
 }
 
@@ -80,6 +79,8 @@ export default {
     margin-right: 10px;
     color: #e9ecef;
     font-weight: 600;
+    
+     
 }
 
 .application-value {
