@@ -44,6 +44,7 @@ class ArchiveRepairApplicationViewSet(
 
 
 class RetrieveApplicationViewSet(mixins.RetrieveModelMixin,
+                                 mixins.UpdateModelMixin,
                            GenericViewSet):
     queryset = Application.objects.all()
     serializer_class = ApplicationRetriveSerializer
