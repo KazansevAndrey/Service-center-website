@@ -61,3 +61,15 @@ export async function get_application(id){
     throw error
   }
 }
+export async function changeStatus(application_id, value){
+  const url = `/applications/retrieve-applicaitons/${application_id}`
+  try {
+    const response  = await axiosInstance.put(url, {'status': value})
+    console.log(response.data)
+    return true
+  }
+  catch(error) {
+    console.log('Error changing status')
+    throw error
+  }
+}

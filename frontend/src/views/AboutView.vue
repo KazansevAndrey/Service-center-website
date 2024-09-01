@@ -127,6 +127,7 @@ mounted() {
 .breadcrumbs {
   color: rgb(127, 127, 127);
   text-decoration: none;
+  padding-top: 30px;
 }
 
 .interpreter:hover {

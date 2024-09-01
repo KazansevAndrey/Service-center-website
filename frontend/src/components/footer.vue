@@ -81,6 +81,9 @@ export default {
 
 <style scoped>
     /* Подвал */
+    *{
+  font-weight: 400 !important;
+}
 footer {
   margin-top: 16px;
   padding: 16px 0;

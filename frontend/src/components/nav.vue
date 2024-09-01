@@ -99,6 +99,9 @@ export default {
 </script>
 
 <style scoped>
+*{
+  font-weight: 400 !important;
+}
 /* Меню */
 .nav-link {
   color: white !important;
