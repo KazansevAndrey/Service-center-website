@@ -1,7 +1,7 @@
 <template>
 
     <div v-if="category_name == 'personalRepairApplications' || category_name == 'incomingRepairApplications'">
-            <a :href="`employee-page-applications/${application.id}`" class="application-item menu" v-for='application in applications' :key="application.id">
+            <a :href="`employee-page-applications/${category_name}/${application.id}`" class="application-item menu" v-for='application in applications' :key="application.id">
                 <div class="application-parameter">
                     <i class="fas fa-user"></i>
                     <span class="application-text">Номер заявки:</span>
@@ -20,7 +20,7 @@
         </a>
     </div>
     <div v-else>
-        <a :href="`employee-page-applications/${application.id}`" class="application-item menu" v-for='application in applications' :key="application.id">
+        <a :href="`employee-page-applications/${category_name}/${application.id}`" class="application-item menu" v-for='application in applications' :key="application.id">
             <div class="application-parameter">
                 <i class="fas fa-user"></i>
                 <span class="application-text">Номер заявки:</span>

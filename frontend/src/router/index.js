@@ -77,7 +77,7 @@ const routes = [
     },
   },
   {
-    path: "/employee-page-applications/:application_id",
+    path: "/employee-page-applications/:category_name/:application_id",
     name: "application",
     component: ApplicationView,
     meta: {

@@ -61,15 +61,39 @@ export async function get_application(id){
     throw error
   }
 }
-export async function changeStatus(application_id, value){
-  const url = `/applications/retrieve-applicaitons/${application_id}`
+export async function set_status(application_id, value){
+  const url = `/applications/retrieve-applicaitons/${application_id}/`
   try {
-    const response  = await axiosInstance.put(url, {'status': value})
-    console.log(response.data)
+    await axiosInstance.patch(url, {'status': value})
     return true
   }
   catch(error) {
     console.log('Error changing status')
+    throw error
+  }
+}
+
+export async function delete_application(application_id){
+  const url = `/applications/retrieve-applicaitons/${application_id}/`
+  try {
+   await axiosInstance.delete(url)
+    return true
+  }
+  catch(error) {
+    console.log('Error delete application')
+    throw error
+  }
+}
+
+export async function set_employee_to_application(application_id, employee_id){
+  const url = `/applications/retrieve-applicaitons/${application_id}/`
+  try {
+    const response  = await axiosInstance.patch(url, {'employee': employee_id})
+    console.log(response.data)
+    return true
+  }
+  catch(error) {
+    console.log('Error set employee to application')
     throw error
   }
 }
