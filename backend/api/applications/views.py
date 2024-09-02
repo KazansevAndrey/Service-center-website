@@ -17,7 +17,7 @@ from .permissions import *
 class PersonalRepairApplicationViewSet(    
                    mixins.ListModelMixin,
                    GenericViewSet):
-    serializer_class = RepairApplicationSerializer
+    serializer_class = ClientEmailApplicationSerializer
     permission_classes = [IsEmployee]
 
     def get_queryset(self):
@@ -27,28 +27,46 @@ class IncomingRepairApplicationViewSet(
                    mixins.ListModelMixin,
                    GenericViewSet):
     queryset = Application.objects.filter(employee__isnull=True, is_archived=False)
-    serializer_class = RepairApplicationSerializer
+    serializer_class = ClientEmailApplicationSerializer
     permission_classes = [IsEmployee]
 
 class CurrentRepairApplicationViewSet(mixins.ListModelMixin,
                                       GenericViewSet):
     queryset = Application.objects.filter(employee__isnull=False, is_archived=False)
-    serializer_class = CurrentRepairApplicationSerializer
+    serializer_class = EmployeeEmailApplicationSerializer
 
 class ArchiveRepairApplicationViewSet(
                    mixins.ListModelMixin,
                    GenericViewSet):
     queryset = Application.objects.filter(is_archived=True)
-    serializer_class = RepairApplicationSerializer
+    serializer_class = EmployeeEmailApplicationSerializer
     permission_classes = [IsEmployee]
 
 
 class RetrieveApplicationViewSet(mixins.RetrieveModelMixin,
                                  mixins.UpdateModelMixin,
+                                 mixins.DestroyModelMixin,
                            GenericViewSet):
     queryset = Application.objects.all()
     serializer_class = ApplicationRetriveSerializer
     permission_classes = [IsEmployee]
+
+    def perform_destroy(self, instance):
+        instance.is_archived = True
+        instance.save()
+
+class RetrieveApplicationViewSet(mixins.RetrieveModelMixin,
+                                 mixins.UpdateModelMixin,
+                                 mixins.DestroyModelMixin,
+                           GenericViewSet):
+    queryset = Application.objects.all()
+    serializer_class = ApplicationRetriveSerializer
+    permission_classes = [IsEmployee]
+
+    def perform_destroy(self, instance):
+        instance.is_archived = True
+        instance.save()
+
 
 class ClientApplicationViewSet(mixins.CreateModelMixin,
                    mixins.RetrieveModelMixin,

@@ -5,14 +5,14 @@ from rest_framework.parsers import JSONParser
 from applications.models import Application, DeviceType
 
 # Заявки которые в данный момент выполняются 
-class CurrentRepairApplicationSerializer(serializers.ModelSerializer):
+class EmployeeEmailApplicationSerializer(serializers.ModelSerializer):
     employee_email = serializers.SlugRelatedField(source='employee', slug_field='user__email', read_only=True)
     class Meta:
         model = Application
         fields = ('id', 'employee_email','time_create')
 
 # Персональные заявки
-class RepairApplicationSerializer(serializers.ModelSerializer):
+class ClientEmailApplicationSerializer(serializers.ModelSerializer):
     user_email = serializers.SlugRelatedField(source='client', slug_field='email', read_only=True)
     class Meta:
         model = Application
@@ -31,12 +31,16 @@ class ApplicationRetriveSerializer(serializers.ModelSerializer):
     user_first_name = serializers.SlugRelatedField(source='client', slug_field='first_name', read_only=True)
     user_last_name = serializers.SlugRelatedField(source='client', slug_field='last_name', read_only=True)
     user_phone_number = serializers.SlugRelatedField(source='client', slug_field='phone_number', read_only=True)
-    status = serializers.CharField(source='get_status_display', read_only=True)
+    status_title = serializers.CharField(source='get_status_display', read_only=True)
     device_title = serializers.SlugRelatedField(source='device', slug_field='device_type', read_only=True)
+    employee_id = serializers.SlugRelatedField(source='employee', slug_field='user.id', read_only=True)
+
     class Meta:
         model = Application
-        fields = ('id', 'user_email', 'user_first_name', 'user_last_name', 'user_phone_number', 'status', 'device_title', 'description', 'time_create')
-
+        fields = ('id', 'user_email', 'user_first_name', 'user_last_name', 'user_phone_number', 'status', 'status_title', 'device_title', 'description', 'time_create', 'employee_id')
+        extra_kwargs={
+            'description': {'read_only': True}
+        }
 class ApplicationClientSerializer(serializers.ModelSerializer):
     status = serializers.CharField(source='get_status_display', read_only=True)
     device_title = serializers.SlugRelatedField(source='device', slug_field='device_type', read_only=True)
