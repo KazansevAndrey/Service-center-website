@@ -12,6 +12,11 @@ class IsEmployee(permissions.BasePermission):
             return hasattr(request.user, 'employeeprofile') 
         else:
             return obj.employee.user == request.user
+    
+class IsEmployeeAccessApplication(permissions.BasePermission):
+    def has_object_permission(self, request, view, obj):
+        if request.method == 'PATCH':
+            return True
         
 class IsClient(permissions.BasePermission):
     """

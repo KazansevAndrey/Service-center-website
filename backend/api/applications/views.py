@@ -2,15 +2,19 @@
 from asyncio.windows_events import NULL
 from urllib import request
 from django.views import generic
+from django.shortcuts import get_object_or_404
 from rest_framework import mixins
 from rest_framework.viewsets import GenericViewSet
 from rest_framework.views import APIView
 from rest_framework.exceptions import MethodNotAllowed
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
+from rest_framework.exceptions import ValidationError
 from .models import Application, DeviceType
 from .serializers import *
 from .permissions import *
+from accounts.models import User
+from employees.models import EmployeeProfile
 # Create your views here.
 
 
@@ -55,18 +59,21 @@ class RetrieveApplicationViewSet(mixins.RetrieveModelMixin,
         instance.is_archived = True
         instance.save()
 
-class RetrieveApplicationViewSet(mixins.RetrieveModelMixin,
-                                 mixins.UpdateModelMixin,
-                                 mixins.DestroyModelMixin,
-                           GenericViewSet):
+class  AcceptApplicationByEmployee(mixins.UpdateModelMixin, GenericViewSet):
     queryset = Application.objects.all()
-    serializer_class = ApplicationRetriveSerializer
-    permission_classes = [IsEmployee]
+    permission_classes = [IsEmployeeAccessApplication]
 
-    def perform_destroy(self, instance):
-        instance.is_archived = True
-        instance.save()
-
+    def update(self, request, *args, **kwargs):
+        application = self.get_object()
+        employee_id = request.data.get("employee_id")
+        if not employee_id:
+            raise ValidationError({'detail': 'employee_id не передан'})
+        user = get_object_or_404(User, id=employee_id)
+        employee = get_object_or_404(EmployeeProfile, user=user)
+        application.employee = employee
+        application.save()
+        return Response({'status': 'Успешно'})
+        
 
 class ClientApplicationViewSet(mixins.CreateModelMixin,
                    mixins.RetrieveModelMixin,

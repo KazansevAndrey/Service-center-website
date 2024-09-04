@@ -20,11 +20,9 @@ class ClientEmailApplicationSerializer(serializers.ModelSerializer):
         
 
 class DeviceTypesSerializer(serializers.ModelSerializer):
-    device_title = serializers.SlugRelatedField(source='device', slug_field='device_type', read_only=True)
-    user_email = serializers.SlugRelatedField(source='client', slug_field='email', read_only=True)
     class Meta:
         model = DeviceType
-        fields = ('id', 'device_title', 'user_email')
+        fields = ('id', 'device_type')
 
 class ApplicationRetriveSerializer(serializers.ModelSerializer):
     user_email = serializers.SlugRelatedField(source='client', slug_field='email', read_only=True)
@@ -37,10 +35,12 @@ class ApplicationRetriveSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Application
-        fields = ('id', 'user_email', 'user_first_name', 'user_last_name', 'user_phone_number', 'status', 'status_title', 'device_title', 'description', 'time_create', 'employee_id')
+        fields = ('id', 'user_email', 'user_first_name', 'user_last_name', 'user_phone_number', 'status', 'status_title', 'device_title', 'description', 'time_create', 'employee_id', 'is_archived')
         extra_kwargs={
             'description': {'read_only': True}
         }
+
+
 class ApplicationClientSerializer(serializers.ModelSerializer):
     status = serializers.CharField(source='get_status_display', read_only=True)
     device_title = serializers.SlugRelatedField(source='device', slug_field='device_type', read_only=True)
@@ -48,7 +48,7 @@ class ApplicationClientSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Application
-        fields = ('id','device', 'user_email', 'device_title', 'time_update', 'status', 'time_create')
+        fields = ('id','device', 'user_email', 'description', 'device_title', 'time_update', 'status', 'time_create')
         extra_kwargs = {
             'time_create': {'read_only': True},
             'time_update': {'read_only': True},

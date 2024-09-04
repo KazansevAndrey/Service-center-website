@@ -9,7 +9,6 @@ from .permissions import *
 # Create your views here.
 
 class CallRequestViewSet(ModelViewSet):
-    count = CallRequest.objects.count()
     queryset = CallRequest.objects.all().order_by('-time_create')
     serializer_class = CallRequestSerializer
     permission_classes = (CallRequestPermission,)
