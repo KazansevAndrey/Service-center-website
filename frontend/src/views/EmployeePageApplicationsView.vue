@@ -150,9 +150,9 @@ export default {
     display: flex;
     flex-direction: column;
     gap: 5px;
-    max-height: 60vh;
     min-width: 25%;
     border-radius: 10px;
+    margin-bottom: 16px;
 }
 
 .category-item {

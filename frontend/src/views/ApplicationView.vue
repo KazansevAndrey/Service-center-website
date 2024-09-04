@@ -13,10 +13,9 @@
             <p class='application-parameter'><strong>Устройство:</strong> {{ application.device_title }}</p>
             <p class='application-parameter'><strong>Описание:</strong> {{ application.description }}</p>
             <p class='application-parameter'><strong>Дата создания:</strong> {{ application.time_create }}</p>
-
         </div>
 
-        <div class="application-actions" v-if = "application.employee_id == employee_id">
+        <div class="application-actions" v-if = "application.employee_id == employee_id && application.is_archived == false">
             <div class="status-change">
                 <label for="status-select">Изменить статус:</label>
                 <select id="status-select" v-model="selectedStatus" @change="changeStatus($event, application_id)">

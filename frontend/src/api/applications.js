@@ -4,7 +4,7 @@ export async function get_device_types() {
     const url = `/applications/device-types-list`;
         try{
             const devices = await axiosInstance.get(url)
-            return await devices.data
+            return devices.data
         }
         catch (error) {
           console.error('Error loading device types:', error);
@@ -15,6 +15,7 @@ export async function get_device_types() {
 export async function send_application(data) {
     const url = `/applications/client-applications/`;
         try{
+          console.log(data, 'daratadasdasd')
         await axiosInstance.post(url, data)
         return true
         }
@@ -86,9 +87,9 @@ export async function delete_application(application_id){
 }
 
 export async function set_employee_to_application(application_id, employee_id){
-  const url = `/applications/retrieve-applicaitons/${application_id}/`
+  const url = `/applications/accept-application/${application_id}/`
   try {
-    const response  = await axiosInstance.patch(url, {'employee': employee_id})
+    const response  = await axiosInstance.patch(url, {'employee_id': employee_id})
     console.log(response.data)
     return true
   }

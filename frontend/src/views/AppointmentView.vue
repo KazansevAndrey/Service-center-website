@@ -71,6 +71,7 @@ export default {
     methods: {
         async loadDevices() {
             this.deviceTypes = await get_device_types()
+            console.log(this.deviceTypess)
 
         },
         // Функция для заявкии пользователя
@@ -103,7 +104,7 @@ export default {
 
             // Если нет ошибок, сохраняем данные пользователя и очищаем поля формы
             if (errors == 0) {
-                const data = { device: technic, description: problem }
+                const data = { "device": technic, "description": problem }
                 await send_application(data)
                 labelErrProblem.style.opacity = "0";
                 labelErrTechnic.style.opacity = "0";
@@ -129,8 +130,7 @@ export default {
 
 <style scoped>
 form{
-    height: 50vh;
-}
+    margin-bottom:16px;}
 .interpreter,
 .breadcrumbs {
     color: rgb(127, 127, 127);

@@ -85,7 +85,7 @@ export default {
   font-weight: 400 !important;
 }
 footer {
-  margin-top: 16px;
+  margin-top: 16px  ;
   padding: 16px 0;
   background-color: #f9f9f9;
 }
