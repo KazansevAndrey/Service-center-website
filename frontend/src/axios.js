@@ -1,19 +1,21 @@
 import axios from 'axios';
 import store from './stores';
-
+axios.defaults.withCredentials = true
 const axiosInstance = axios.create({
-  baseURL: 'http://127.0.0.1:8000/api/v1/',  
+  baseURL: 'http://127.0.0.1:8000/api/v1/',
   timeout: 5000,
   headers: {
-    'Content-Type': 'application/json',          
+    'Content-Type': 'application/json',
   },
-  withCredentials: true,  // Если сервер требует отправки cookies
-});
+
+  withCredentials: true // Necessary to receive cookies
+}
+);
 
 // Интерсептор запросов для добавления токена
 axiosInstance.interceptors.request.use(
   (config) => {
-    const access_token = localStorage.getItem('access');  
+    const access_token = localStorage.getItem('access');
     if (access_token) {
       config.headers.Authorization = `Bearer ${access_token}`;
     }
@@ -32,7 +34,7 @@ const getCurrentUser = async () => {
       authUser: userResponse.data,
       isAuthenticated: true,
     });
-    
+
   } catch (error) {
     console.error("Failed to fetch current user", error);
     throw error;
@@ -47,18 +49,11 @@ axiosInstance.interceptors.response.use(
     if (err.response !== undefined && err.response.status === 401 && !originalConfig._retry) {
       originalConfig._retry = true;
       try {
-        const response = await axiosInstance.post("/token/refresh/", {
-          refresh: localStorage.getItem('refresh'),
-        });
-        const { access, refresh } = response.data;
-        const tokens = { access, refresh };
-
-        store.commit("auth/updateToken", tokens);
-        localStorage.setItem('access', access);
-        localStorage.setItem('refresh', refresh);
-
+        const response = await axiosInstance.post("users/auth/token/refresh/");
+        const access = response.data.access;
+        console.log(access)
+        store.commit("auth/updateToken", access);
         await getCurrentUser(); // Получение текущего пользователя после обновления токена
-
         return axiosInstance(originalConfig); // Повторный запрос
       } catch (err) {
         store.commit("auth/logout");

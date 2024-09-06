@@ -4,8 +4,8 @@ const state = {
   isAuthenticated: false,
   jwt: localStorage.getItem('access'),
   endpoints: {
-    obtainJWT: "http://127.0.0.1:8000/api/v1/token/",
-    refreshJWT: "http://127.0.0.1:8000/api/v1/refresh_token/",
+    obtainJWT: "http://127.0.0.1:8000/api/v1/users/auth/token/",
+    refreshJWT: "http://127.0.0.1:8000/api/v1/users/auth/refresh_token/",
     baseUrl: "http://127.0.0.1:8000/api/v1/",
   },
 }
@@ -15,14 +15,12 @@ const mutations = {
     state.authUser = authUser;
     state.isAuthenticated = isAuthenticated;
   },
-  updateToken(state, tokens) {
-    localStorage.setItem("access", tokens.access);
-    localStorage.setItem("refresh", tokens.refresh);
-    state.jwt = tokens.access;
+  updateToken(state, access_token) {
+    localStorage.setItem("access", access_token);
+    state.jwt = access_token;
   },
   logout(state) {
     localStorage.removeItem("access");
-    localStorage.removeItem("refresh");
     state.jwt = null;
     state.isAuthenticated = false;
     state.authUser = {}
