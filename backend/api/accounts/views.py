@@ -5,6 +5,11 @@ from rest_framework.response import Response
 from django.contrib.auth import get_user_model
 from yaml import serialize
 from .serializers import UserSerializer
+    
+from rest_framework_simplejwt.views import TokenRefreshView, TokenObtainPairView
+from rest_framework_simplejwt.serializers import TokenRefreshSerializer
+from rest_framework_simplejwt.exceptions import InvalidToken
+
 # Create your views here.
 
 class RegistrationView(generics.CreateAPIView):
@@ -24,3 +29,33 @@ class CurrentUserView(generics.RetrieveAPIView):
     permission_classes = [permissions.IsAuthenticated]
     def get_object(self):
         return self.request.user
+    
+# логика для добавления и считывания refresh токена в http only cookies
+class CookieTokenRefreshSerializer(TokenRefreshSerializer):
+    refresh = None
+    def validate(self, attrs):
+        attrs['refresh'] = self.context['request'].COOKIES.get('refresh_token')
+        if attrs['refresh']:
+            return super().validate(attrs)
+        else:
+            raise InvalidToken('No valid token found in cookie\'refresh_token\'')
+
+class CookieTokenObtainPairView(TokenObtainPairView):
+    def finalize_response(self, request, response, *args, **kwargs):
+        if response.data.get('refresh'):
+            cookie_max_age = 3600 * 24 * 14 # 14 days
+            response.set_cookie(key='refresh_token', value=response.data['refresh'], max_age=cookie_max_age, path='/')
+            print(response.data['refresh'])
+            del response.data['refresh']
+        return super().finalize_response(request, response, *args, **kwargs)
+
+class CookieTokenRefreshView(TokenRefreshView):
+    def finalize_response(self, request, response, *args, **kwargs):
+        if response.data.get('refresh'):
+            cookie_max_age = 3600 * 24 * 14 # 14 days
+            response.set_cookie(key='refresh_token',value=response.data['refresh'], max_age=cookie_max_age, httponly=True )
+            print(response.data['refresh'])
+
+            del response.data['refresh']
+        return super().finalize_response(request, response, *args, **kwargs)
+    serializer_class = CookieTokenRefreshSerializer
