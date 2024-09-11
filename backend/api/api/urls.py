@@ -34,7 +34,7 @@ schema_view = get_schema_view(
       license=openapi.License(name="BSD License"),
    ),
    public=True,
-   #permission_classes=[permissions.IsAdminUser],
+#    permission_classes=[permissions.IsAdminUser],
 )
 
 urlpatterns = [
@@ -47,9 +47,6 @@ urlpatterns = [
     path('api/v1/certificates/', include('main.routers')),
     #path('api/v1/',include('services.routers')),
     #path('api/v1/', include('employees.routers')),
-    path('api/v1/token/', TokenObtainPairView.as_view(), name='token_obtain_pair'),
-    path('api/v1/token/refresh/', TokenRefreshView.as_view(), name='token_refresh'),
-    path('api/v1/token/verify/', TokenVerifyView.as_view(), name='token_verify'),
     path('api/v1/users/', include('accounts.routers')),
     path('swagger<format>/', schema_view.without_ui(cache_timeout=0), name='schema-json'),
     path('swagger/', schema_view.with_ui('swagger', cache_timeout=0), name='schema-swagger-ui'),

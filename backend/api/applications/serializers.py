@@ -31,11 +31,11 @@ class ApplicationRetriveSerializer(serializers.ModelSerializer):
     user_phone_number = serializers.SlugRelatedField(source='client', slug_field='phone_number', read_only=True)
     status_title = serializers.CharField(source='get_status_display', read_only=True)
     device_title = serializers.SlugRelatedField(source='device', slug_field='device_type', read_only=True)
-    employee_id = serializers.SlugRelatedField(source='employee', slug_field='user.id', read_only=True)
+    employee_id = serializers.SlugRelatedField(source='employee', slug_field='user__id', read_only=True)
 
     class Meta:
         model = Application
-        fields = ('id', 'user_email', 'user_first_name', 'user_last_name', 'user_phone_number', 'status', 'status_title', 'device_title', 'description', 'time_create', 'employee_id', 'is_archived')
+        fields = ('id', 'user_email', 'user_first_name', 'user_last_name', 'user_phone_number', 'status_title', 'device_title', 'description', 'time_create', 'employee_id', 'is_archived')
         extra_kwargs={
             'description': {'read_only': True}
         }
